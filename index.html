@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Launcher - ماینکرافت</title>
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0e27 0%, #1a2a6c 50%, #0d1b3e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .launcher {
+            width: 100%;
+            max-width: 950px;
+            background: radial-gradient(ellipse at center, #1e3a7a 0%, #0b1a42 80%);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                inset 0 0 30px rgba(64, 224, 255, 0.2),
+                0 0 40px rgba(0, 150, 255, 0.3);
+            border: 2px solid rgba(64, 224, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .launcher::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(64, 224, 255, 0.05), transparent, rgba(64, 224, 255, 0.05), transparent);
+            animation: shimmer 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            filter: drop-shadow(0 0 20px rgba(64, 224, 255, 0.6));
+        }
+
+        .logo-text {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(64, 224, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .logo-text span {
+            color: #40e0ff;
+        }
+
+        .diamond-badge {
+            background: linear-gradient(135deg, #40e0ff, #0080ff);
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 0 20px rgba(64, 224, 255, 0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(64, 224, 255, 0.3);
+            color: #c0d4ff;
+            padding: 12px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .menu-btn:hover {
+            background: rgba(64, 224, 255, 0.15);
+            border-color: #40e0ff;
+            box-shadow: 0 0 30px rgba(64, 224, 255, 0.2);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+        .menu-btn.active {
+            background: linear-gradient(135deg, rgba(64, 224, 255, 0.2), rgba(0, 128, 255, 0.2));
+            border-color: #40e0ff;
+            box-shadow: 0 0 40px rgba(64, 224, 255, 0.3);
+            color: #fff;
+        }
+
+        .content {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(64, 224, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            min-height: 380px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Install Page */
+        .install-box {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .install-title {
+            color: #40e0ff;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            text-shadow: 0 0 30px rgba(64, 224, 255, 0.3);
+        }
+
+        .install-subtitle {
+            color: #8aa0c0;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .install-detail {
+            color: #6a80a0;
+            font-size: 14px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 1px solid rgba(64, 224, 255, 0.05);
+        }
+
+        .install-detail strong {
+            color: #40e0ff;
+        }
+
+        .install-btn {
+            background: linear-gradient(145deg, #40e0ff, #0080ff);
+            border: none;
+            padding: 18px 50px;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 40px rgba(64, 224, 255, 0.4);
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .install-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(64, 224, 255, 0.6);
+        }
+
+        .install-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .install-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .install-btn .shine {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 25px auto;
+            max-width: 450px;
+            display: none;
+        }
+
+        .progress-container.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 16px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(64, 224, 255, 0.12);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #40e0ff, #0080ff);
+            border-radius: 10px;
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 30px rgba(64, 224, 255, 0.3);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: progressGlow 1.2s infinite;
+        }
+
+        @keyframes progressGlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            color: #40e0ff;
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: 22px;
+            text-shadow: 0 0 20px rgba(64, 224, 255, 0.3);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-detail {
+            color: #8aa0c0;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* Account */
+        .account-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .account-form h3 {
+            color: #40e0ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            color: #a0b8e0;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(64, 224, 255, 0.2);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #40e0ff;
+            box-shadow: 0 0 20px rgba(64, 224, 255, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #4a5a7a;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(145deg, #40e0ff, #0080ff);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(64, 224, 255, 0.3);
+        }
+
+        .create-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(64, 224, 255, 0.5);
+        }
+
+        /* Mods */
+        .mods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .mods-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mod-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(64, 224, 255, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .mod-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .mod-card h4 {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .mod-card p {
+            color: #8aa0c0;
+            font-size: 14px;
+        }
+
+        .mod-card.modrinth {
+            border-color: #1bd96a;
+        }
+
+        .mod-card.modrinth:hover {
+            border-color: #1bd96a;
+            box-shadow: 0 0 40px rgba(27, 217, 106, 0.2);
+        }
+
+        .mod-card.curseforge {
+            border-color: #f16436;
+        }
+
+        .mod-card.curseforge:hover {
+            border-color: #f16436;
+            box-shadow: 0 0 40px rgba(241, 100, 54, 0.2);
+        }
+
+        .mod-card .mod-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            border-radius: 25px;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .mod-card.modrinth .mod-btn {
+            background: #1bd96a;
+        }
+
+        .mod-card.modrinth .mod-btn:hover {
+            background: #15b856;
+            box-shadow: 0 0 30px rgba(27, 217, 106, 0.4);
+        }
+
+        .mod-card.curseforge .mod-btn {
+            background: #f16436;
+        }
+
+        .mod-card.curseforge .mod-btn:hover {
+            background: #d4542a;
+            box-shadow: 0 0 30px rgba(241, 100, 54, 0.4);
+        }
+
+        /* Real Logos */
+        .mod-logo-real {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 800;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mod-card.modrinth .mod-logo-real {
+            background: #1bd96a;
+            color: #fff;
+        }
+
+        .mod-card.modrinth .mod-logo-real svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .mod-card.curseforge .mod-logo-real {
+            background: #f16436;
+            color: #fff;
+        }
+
+        .mod-card.curseforge .mod-logo-real svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .mod-logo-real .logo-text-in {
+            font-size: 20px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .mod-card.modrinth .mod-logo-real .logo-text-in {
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .mod-card.curseforge .mod-logo-real .logo-text-in {
+            font-family: 'Georgia', serif;
+            font-weight: 900;
+        }
+
+        /* Status Messages */
+        .status-msg {
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .status-msg.success {
+            display: block;
+            background: rgba(27, 217, 106, 0.15);
+            border: 1px solid #1bd96a;
+            color: #1bd96a;
+        }
+
+        .status-msg.error {
+            display: block;
+            background: rgba(255, 50, 50, 0.15);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+        }
+
+        .status-msg.info {
+            display: block;
+            background: rgba(64, 224, 255, 0.15);
+            border: 1px solid #40e0ff;
+            color: #40e0ff;
+        }
+
+        .status-msg.warning {
+            display: block;
+            background: rgba(255, 200, 0, 0.15);
+            border: 1px solid #ffcc00;
+            color: #ffcc00;
+        }
+
+        .hidden-link-input {
+            display: none;
+        }
+
+        .auto-open-info {
+            color: #6a80a0;
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="launcher">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">💎</span>
+            <span class="logo-text">Diamond<span>Launcher</span></span>
+        </div>
+        <div class="diamond-badge">✦ الماس</div>
+    </div>
+
+    <!-- Main Menu -->
+    <div class="main-menu">
+        <button class="menu-btn active" data-page="install">📥 نصب</button>
+        <button class="menu-btn" data-page="mods">🧩 مودها</button>
+        <button class="menu-btn" data-page="account">👤 اکانت</button>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Page: Install -->
+        <div id="page-install" class="page active">
+            <div class="install-box">
+                <div class="install-title">💎 الماس کلاینت</div>
+                <div class="install-subtitle">ماینکرافت نسخه ۱.۱۶.۵ جاوا</div>
+                <div class="install-detail">
+                    ⚡ <strong>بهترین تجربه</strong> • بهینه‌سازی شده • نصب یک‌کلیک
+                </div>
+                
+                <button class="install-btn" id="installBtn">
+                    <span class="shine"></span>
+                    🚀 نصب خودکار
+                </button>
+
+                <div class="auto-open-info">🔗 پس از اتمام، لینک دانلود به‌صورت خودکار باز می‌شود</div>
+
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">۰%</div>
+                    <div class="progress-detail" id="progressDetail">آماده‌سازی...</div>
+                </div>
+
+                <div id="installStatus" class="status-msg"></div>
+            </div>
+        </div>
+
+        <!-- Page: Mods -->
+        <div id="page-mods" class="page">
+            <h3 style="color:#40e0ff; margin-bottom:15px;">🧩 نصب مودها</h3>
+            <div class="mods-grid">
+                <!-- Modrinth -->
+                <div class="mod-card modrinth" id="modrinthCard">
+                    <div class="mod-logo-real">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="80" height="80" rx="16" fill="white" opacity="0.2"/>
+                            <text x="50" y="58" font-family="Arial Black, sans-serif" font-size="32" font-weight="900" fill="white" text-anchor="middle" dominant-baseline="middle">M</text>
+                            <circle cx="30" cy="35" r="6" fill="white" opacity="0.4"/>
+                            <circle cx="70" cy="35" r="6" fill="white" opacity="0.4"/>
+                        </svg>
+                    </div>
+                    <h4>مدرینت</h4>
+                    <p>Modrinth - منبع مودهای مدرن</p>
+                    <button class="mod-btn" id="modrinthBtn">🌐 باز کردن سایت</button>
+                </div>
+
+                <!-- CurseForge -->
+                <div class="mod-card curseforge" id="curseforgeCard">
+                    <div class="mod-logo-real">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="80" height="80" rx="16" fill="white" opacity="0.2"/>
+                            <text x="50" y="58" font-family="Georgia, serif" font-size="28" font-weight="900" fill="white" text-anchor="middle" dominant-baseline="middle">CF</text>
+                            <circle cx="28" cy="32" r="5" fill="white" opacity="0.3"/>
+                            <circle cx="72" cy="32" r="5" fill="white" opacity="0.3"/>
+                            <path d="M35 70 L50 55 L65 70" stroke="white" stroke-width="3" fill="none" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <h4>کرس فورج</h4>
+                    <p>CurseForge - بزرگترین مخزن مود</p>
+                    <button class="mod-btn" id="curseforgeBtn">🌐 باز کردن سایت</button>
+                </div>
+            </div>
+            <div id="modStatus" class="status-msg"></div>
+        </div>
+
+        <!-- Page: Account -->
+        <div id="page-account" class="page">
+            <div class="account-form">
+                <h3>✨ ساخت اکانت جدید</h3>
+                <div class="form-group">
+                    <label>نام کاربری</label>
+                    <input type="text" id="username" placeholder="نام خود را وارد کنید...">
+                </div>
+                <div class="form-group">
+                    <label>ایمیل</label>
+                    <input type="email" id="email" placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label>رمز عبور</label>
+                    <input type="password" id="password" placeholder="********">
+                </div>
+                <button class="create-btn" id="createAccountBtn">✅ ساخت اکانت</button>
+                <div id="accountStatus" class="status-msg"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden input for custom link -->
+<input type="text" id="customDownloadLink" class="hidden-link-input" value="https://cdn.imgurl.ir/uploads/972044_DiamondClient-3.0.61.16.5.zip">
+
+<script>
+    // ===================== CONFIG =====================
+    const DOWNLOAD_LINK = document.getElementById('customDownloadLink').value;
+    const MODRINTH_LINK = 'https://modrinth.com';
+    const CURSEFORGE_LINK = 'https://curseforge.com/minecraft';
+
+    // ===================== MENU NAVIGATION =====================
+    const menuBtns = document.querySelectorAll('.menu-btn');
+    const pages = {
+        install: document.getElementById('page-install'),
+        mods: document.getElementById('page-mods'),
+        account: document.getElementById('page-account')
+    };
+
+    menuBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            menuBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const pageId = this.dataset.page;
+            Object.keys(pages).forEach(key => {
+                pages[key].classList.toggle('active', key === pageId);
+            });
+
+            document.querySelectorAll('.status-msg').forEach(el => {
+                el.className = 'status-msg';
+                el.textContent = '';
+            });
+        });
+    });
+
+    // ===================== INSTALL (با باز شدن خودکار لینک) =====================
+    const installBtn = document.getElementById('installBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const progressDetail = document.getElementById('progressDetail');
+    const installStatus = document.getElementById('installStatus');
+
+    let isInstalling = false;
+
+    const installSteps = [
+        { percent: 0, label: 'آماده‌سازی...' },
+        { percent: 5, label: 'اتصال به سرور الماس...' },
+        { percent: 12, label: 'دریافت فایل‌های مورد نیاز...' },
+        { percent: 25, label: 'دانلود هسته بازی ۱.۱۶.۵...' },
+        { percent: 40, label: 'استخراج فایل‌ها...' },
+        { percent: 55, label: 'نصب کتابخانه‌های جاوا...' },
+        { percent: 70, label: 'پیکربندی تنظیمات الماس...' },
+        { percent: 85, label: 'بهینه‌سازی فایل‌ها...' },
+        { percent: 95, label: 'نهایی‌سازی...' },
+        { percent: 100, label: 'نصب کامل شد! ✅' }
+    ];
+
+    function startInstallation() {
+        if (isInstalling) return;
+        isInstalling = true;
+
+        progressContainer.classList.add('show');
+        progressFill.style.width = '0%';
+        progressText.textContent = '۰%';
+        progressDetail.textContent = 'شروع نصب...';
+        installStatus.className = 'status-msg';
+        installStatus.textContent = '';
+        installBtn.disabled = true;
+        installBtn.innerHTML = '⏳ در حال نصب...';
+
+        let currentStep = 0;
+        let currentPercent = 0;
+
+        function nextStep() {
+            if (currentStep >= installSteps.length) {
+                finishInstall();
+                return;
+            }
+
+            const step = installSteps[currentStep];
+            const targetPercent = step.percent;
+            const increment = Math.max(1, Math.floor((targetPercent - currentPercent) / 10));
+
+            function animateToTarget() {
+                if (currentPercent < targetPercent) {
+                    currentPercent = Math.min(currentPercent + increment, targetPercent);
+                    updateProgress(currentPercent, step.label);
+                    
+                    if (currentPercent < targetPercent) {
+                        requestAnimationFrame(animateToTarget);
+                    } else {
+                        currentStep++;
+                        setTimeout(nextStep, 200 + Math.random() * 300);
+                    }
+                } else {
+                    currentStep++;
+                    setTimeout(nextStep, 200);
+                }
+            }
+
+            animateToTarget();
+        }
+
+        function updateProgress(percent, label) {
+            const rounded = Math.round(percent);
+            progressFill.style.width = percent + '%';
+            progressText.textContent = rounded + '%';
+            if (label) {
+                progressDetail.textContent = label;
+            }
+        }
+
+        function finishInstall() {
+            progressFill.style.width = '100%';
+            progressText.textContent = '۱۰۰%';
+            progressDetail.textContent = '✅ نصب با موفقیت انجام شد!';
+
+            installStatus.className = 'status-msg success';
+            installStatus.innerHTML = '✅ نصب الماس کلاینت با موفقیت انجام شد!';
+
+            installBtn.innerHTML = '✅ نصب شد!';
+            installBtn.disabled = false;
+            isInstalling = false;
+
+            // ===== باز کردن خودکار لینک =====
+            setTimeout(() => {
+                installStatus.className = 'status-msg info';
+                installStatus.innerHTML = `🔗 در حال باز کردن لینک دانلود...<br><small style="font-size:12px;opacity:0.7;">${DOWNLOAD_LINK}</small>`;
+                
+                // باز کردن لینک در تب جدید به صورت خودکار
+                window.open(DOWNLOAD_LINK, '_blank');
+                console.log('📥 لینک دانلود باز شد:', DOWNLOAD_LINK);
+            }, 1000);
+        }
+
+        nextStep();
+    }
+
+    installBtn.addEventListener('click', startInstallation);
+
+    // ===================== MODS =====================
+    const modrinthBtn = document.getElementById('modrinthBtn');
+    const curseforgeBtn = document.getElementById('curseforgeBtn');
+    const modStatus = document.getElementById('modStatus');
+
+    function openModSite(url, name) {
+        modStatus.className = 'status-msg info';
+        modStatus.textContent = `🌐 در حال باز کردن ${name}...`;
+        setTimeout(() => {
+            window.open(url, '_blank');
+            modStatus.className = 'status-msg success';
+            modStatus.textContent = `✅ ${name} با موفقیت باز شد!`;
+        }, 400);
+    }
+
+    modrinthBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModSite(MODRINTH_LINK, 'مدرینت');
+    });
+
+    curseforgeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModSite(CURSEFORGE_LINK, 'کرس فورج');
+    });
+
+    document.getElementById('modrinthCard').addEventListener('click', function(e) {
+        if (e.target.tagName !== 'BUTTON') {
+            openModSite(MODRINTH_LINK, 'مدرینت');
+        }
+    });
+
+    document.getElementById('curseforgeCard').addEventListener('click', function(e) {
+        if (e.target.tagName !== 'BUTTON') {
+            openModSite(CURSEFORGE_LINK, 'کرس فورج');
+        }
+    });
+
+    // ===================== ACCOUNT =====================
+    const createAccountBtn = document.getElementById('createAccountBtn');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const accountStatus = document.getElementById('accountStatus');
+
+    createAccountBtn.addEventListener('click', function() {
+        const username = usernameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!username || !email || !password) {
+            accountStatus.className = 'status-msg error';
+            accountStatus.textContent = '❌ لطفاً همه فیلدها را پر کنید!';
+            return;
+        }
+
+        if (password.length < 6) {
+            accountStatus.className = 'status-msg error';
+            accountStatus.textContent = '❌ رمز عبور باید حداقل ۶ کاراکتر باشد!';
+            return;
+        }
+
+        accountStatus.className = 'status-msg info';
+        accountStatus.textContent = '⏳ در حال ساخت اکانت...';
+
+        setTimeout(() => {
+            const users = JSON.parse(localStorage.getItem('mc_users') || '[]');
+            users.push({ username, email, created: new Date().toISOString() });
+            localStorage.setItem('mc_users', JSON.stringify(users));
+
+            accountStatus.className = 'status-msg success';
+            accountStatus.textContent = `✅ اکانت "${username}" با موفقیت ساخته شد!`;
+            
+            usernameInput.value = '';
+            emailInput.value = '';
+            passwordInput.value = '';
+        }, 1500);
+    });
+
+    // ===================== CONSOLE =====================
+    console.log('💎 Diamond Launcher v2.0 - ماینکرافت ۱.۱۶.۵ جاوا');
+    console.log('📥 لینک دانلود:', DOWNLOAD_LINK);
+    console.log('🧩 مدرینت:', MODRINTH_LINK);
+    console.log('🧩 کرس فورج:', CURSEFORGE_LINK);
+    console.log('👤 کاربران:', JSON.parse(localStorage.getItem('mc_users') || '[]'));
+</script>
+
+</body>
+</html>
